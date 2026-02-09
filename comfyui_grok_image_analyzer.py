@@ -12,6 +12,10 @@ import torch
 import numpy as np
 from PIL import Image
 from typing import Tuple, Dict, Any
+import logging
+
+# Setup logging
+logger = logging.getLogger(__name__)
 
 
 class GrokImageAnalyzer:
@@ -48,12 +52,13 @@ class GrokImageAnalyzer:
             }
         }
 
-    RETURN_TYPES = ("STRING",)
-    RETURN_NAMES = ("prompt",)
+    RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("prompt", "preview")
     FUNCTION = "analyze_image"
     CATEGORY = "image/analysis"
+    OUTPUT_NODE = True
 
-    def analyze_image(self, image: torch.Tensor, api_key: str, model: str, system_prompt: str = "", user_prompt: str = "") -> Tuple[str]:
+    def analyze_image(self, image: torch.Tensor, api_key: str, model: str, system_prompt: str = "", user_prompt: str = "") -> Tuple[str, str]:
         """
         Analyze an image using Grok API and return a descriptive prompt
 
@@ -65,7 +70,7 @@ class GrokImageAnalyzer:
             user_prompt: Optional prompt for analysis
 
         Returns:
-            Tuple containing the generated prompt string
+            Tuple containing the generated prompt string and preview
         """
 
         # Validate API key
@@ -137,7 +142,16 @@ class GrokImageAnalyzer:
             if not prompt:
                 raise ValueError("No analysis returned from Grok API")
 
-            return (prompt,)
+            # Display preview in console
+            print(f"\n{'='*80}")
+            print("GENERATED PROMPT PREVIEW")
+            print(f"{'='*80}")
+            print(prompt)
+            print(f"{'='*80}\n")
+            
+            logger.info(f"Generated prompt: {prompt}")
+
+            return (prompt, prompt)
 
         except requests.exceptions.RequestException as e:
             raise RuntimeError(f"Grok API request failed: {str(e)}")
