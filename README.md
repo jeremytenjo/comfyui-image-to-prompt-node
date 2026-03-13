@@ -21,16 +21,12 @@ Use this when ComfyUI is running inside a RunPod template/container.
 cd /workspace/ComfyUI/custom_nodes
 ```
 
-3. Clone this node:
+3. import node:
 
 ```bash
-git clone https://github.com/jeremytenjo/comfyui-image-to-prompt-node.git
-```
-
-4. Install dependencies in the pod environment:
-
-```bash
-pip install requests pillow
+git clone https://github.com/jeremytenjo/comfyui-image-to-prompt-node.git &&
+cd comfyui-image-to-prompt-node &&
+pip install -r requirements.txt
 ```
 
 5. Set your API key in RunPod:
